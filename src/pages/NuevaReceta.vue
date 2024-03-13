@@ -40,11 +40,13 @@
           <q-input
             class="q-pa-xs"
             outlined
-            type="number"
+            type="text"
             label="Cantidad"
             v-model="cantidad"
             lazy-rules
             :rules="[
+              (val) =>
+                (val && !isNaN(val)) || 'Por favor, ingresa un número válido',
               (val) => (val && val.length > 0) || 'Este campo está vacío',
             ]"
           ></q-input>
@@ -97,7 +99,7 @@ const $q = useQuasar();
 const ingrediente = ref(null);
 const unidad = ref(null);
 const cantidad = ref(null);
-const opciones = ref(["cc", "ml", "g", "cda", "cdita", "taza", "ud"]);
+const opciones = ref(["cc", "ml", "g", "cda", "cdita", "taza"]);
 const recetaName = ref(null);
 const descripcion = ref("");
 const receta = ref();
@@ -109,17 +111,17 @@ const agregarIngrediente = () => {
     {
       ingrediente: ingrediente.value,
       cantidad: cantidad.value,
-      unidad: unidad.value == null ? "ud(s)" : unidad.value,
+      unidad: unidad.value == null ? "ud" : unidad.value,
     },
   ];
   reset();
 };
 
 const crearReceta = () => {
-  if (ingredientes.value.length < 2) {
+  if (ingredientes.value.length < 1) {
     $q.notify({
       type: "warning",
-      message: "La receta debe tener al menos dos ingredientes",
+      message: "La receta debe tener al menos un ingrediente",
     });
   } else {
     receta.value = {
@@ -128,7 +130,7 @@ const crearReceta = () => {
       descripcion: descripcion.value,
     };
     try {
-      $q.localStorage.set(recetaName.value, receta.value);
+      $q.localStorage.set(recetaName.value, JSON.stringify(receta.value));
       descripcion.value = "";
       recetaName.value = null;
       ingredientes.value = [];
