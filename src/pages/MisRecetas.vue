@@ -12,13 +12,13 @@
         @click="ordenar"
         class="absolute-top-right q-mt-lg q-mr-lg"
       />
-      <q-separator class="q-mt-xs"></q-separator>
     </div>
+    <q-separator class="q-mt-xs"></q-separator>
     <q-list separator>
-      <q-item v-for="receta in keys" :key="receta" class="q-pl-md">
+      <q-item v-for="receta in keys" :key="receta" class="q-pl-xs q-pr-xs">
         <q-item-section>
           <h6 class="text-bold text-purple q-ma-xs">
-            - {{ receta }}
+            · {{ receta }}
           </h6></q-item-section
         >
         <q-item-section avatar>
@@ -68,14 +68,21 @@
     </q-list>
     <q-dialog v-model="mostrar">
       <q-card class="bg-primary">
-        <q-card-section class="row q-pb-none">
-          <div class="text-h5 q-pl-md text-black text-bold">
+        <q-card-section class="q-pl-sm q-pr-sm q-pb-sm">
+          <q-btn
+            icon="close"
+            flat
+            round
+            dense
+            v-close-popup
+            padding="none"
+            class="float-right"
+          />
+          <div class="text-h5 text-secondary text-bold text-center">
             {{ $receta.nombreReceta }}
           </div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
-        <q-card-section>
+        <q-card-section class="q-pt-none">
           <TablaDeIngredientes
             :ingredientes="$receta.ingredientes"
           ></TablaDeIngredientes>
@@ -98,7 +105,7 @@
         </div>
         <q-card-section class="text-center">
           <q-btn
-            v-if="!$receta.nombreReceta.includes('(prop.)')"
+            v-if="!$receta.nombreReceta.includes('proporcion')"
             label="Calcular proporcion"
             icon-right="calculate"
             text-color="purple"

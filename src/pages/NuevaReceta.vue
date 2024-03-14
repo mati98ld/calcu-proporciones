@@ -99,22 +99,33 @@ const $q = useQuasar();
 const ingrediente = ref(null);
 const unidad = ref(null);
 const cantidad = ref(null);
-const opciones = ref(["cc", "ml", "g", "cda", "cdita", "taza"]);
+const opciones = ref(["cc", "ml", "g", "cda", "cdita", "taza", "ud"]);
 const recetaName = ref(null);
 const descripcion = ref("");
 const receta = ref();
 const ingredientes = ref([]);
 
 const agregarIngrediente = () => {
-  ingredientes.value = [
-    ...ingredientes.value,
-    {
-      ingrediente: ingrediente.value,
-      cantidad: cantidad.value,
-      unidad: unidad.value == null ? "ud" : unidad.value,
-    },
-  ];
-  reset();
+  if (
+    ingredientes.value.some(
+      (i) => i.ingrediente.toLowerCase() === ingrediente.value.toLowerCase()
+    )
+  ) {
+    $q.notify({
+      type: "warning",
+      message: "El ingrediente ya existe",
+    });
+  } else {
+    ingredientes.value = [
+      ...ingredientes.value,
+      {
+        ingrediente: ingrediente.value,
+        cantidad: cantidad.value,
+        unidad: unidad.value == null ? "ud" : unidad.value,
+      },
+    ];
+    reset();
+  }
 };
 
 const crearReceta = () => {

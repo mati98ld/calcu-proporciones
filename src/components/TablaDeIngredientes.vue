@@ -7,6 +7,7 @@
     class="bg-secondary my-sticky-virtscroll-table"
     :hide-bottom="!(ingredientes[0] == null)"
     :selection="seleccion"
+    exact
     v-model:selected="selected"
     row-key="ingrediente"
     virtual-scroll
@@ -50,7 +51,7 @@
     ></q-btn>
   </div>
 
-  <q-dialog v-model="agregarIng">
+  <q-dialog v-model="agregarIng" @hide="reset()">
     <q-card class="bg-primary">
       <q-card-section class="row q-pb-none">
         <div class="text-h5 q-pl-md text-black text-bold">
@@ -112,7 +113,7 @@ import { useQuasar } from "quasar";
 
 const $q = useQuasar();
 const agregarIng = ref(false);
-const opciones = ref(["cc", "ml", "g", "cda", "cdita", "taza"]);
+const opciones = ref(["cc", "ml", "g", "cda", "cdita", "taza", "ud"]);
 const unidad = ref();
 const cantidad = ref();
 const ingrediente = ref();
@@ -180,12 +181,30 @@ const seccionEliminar = () => {
 const pagination = { rowsPerPage: 0 };
 
 const agregar = (ing) => {
-  ing.push({
-    ingrediente: ingrediente.value,
-    cantidad: cantidad.value,
-    unidad: unidad.value == null ? "ud" : unidad.value,
-  });
+  if (
+    ing.some(
+      (i) => i.ingrediente.toLowerCase() === ingrediente.value.toLowerCase()
+    )
+  ) {
+    $q.notify({
+      type: "warning",
+      message: "El ingrediente ya existe",
+    });
+  } else {
+    ing.push({
+      ingrediente: ingrediente.value,
+      cantidad: cantidad.value,
+      unidad: unidad.value == null ? "ud" : unidad.value,
+    });
+    reset();
+  }
+};
+
+const reset = () => {
   agregarIng.value = false;
+  ingrediente.value = "";
+  cantidad.value = "";
+  unidad.value = null;
 };
 </script>
 

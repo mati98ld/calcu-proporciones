@@ -2,8 +2,7 @@
   <q-page padding class="bg-secondary">
     <div class="text-center q-pa-md q-mt-xs">
       <div class="text-h5 text-purple text-bold">
-        {{ recetaOriginal.nombreReceta }}: {{ cantidad }}
-        {{ ingredienteOriginal.unidad }} de {{ ingrediente }}
+        {{ proporcion.nombreReceta }}
       </div>
     </div>
     <div>
@@ -28,6 +27,7 @@
     </div>
     <div class="row justify-center">
       <q-btn
+        :disabled="seGuardo"
         label="Guardar proporcion"
         color="primary"
         class="q-ma-md col-6"
@@ -49,6 +49,7 @@ const $q = useQuasar();
 const key = route.query.receta;
 const ingrediente = route.query.ingrediente;
 const cantidad = route.query.cantidad;
+const seGuardo = ref(false);
 
 const recetaOriginal = JSON.parse($q.localStorage.getItem(key));
 const proporcion = ref(JSON.parse(JSON.stringify(recetaOriginal)));
@@ -66,14 +67,22 @@ for (let i = 0; i < proporcion.value.ingredientes.length; i++) {
   );
 }
 
-proporcion.value.nombreReceta = recetaOriginal.nombreReceta += " (prop.)";
+proporcion.value.nombreReceta =
+  recetaOriginal.nombreReceta +
+  " en proporcion a " +
+  cantidad +
+  " " +
+  ingredienteOriginal.unidad +
+  " de " +
+  ingrediente;
 
 const guardarProporcion = () => {
   try {
     $q.localStorage.set(
-      proporcion.value.nombreReceta,
+      (recetaOriginal.nombreReceta += " (prop.)"),
       JSON.stringify(proporcion.value)
     );
+    seGuardo.value = true;
     $q.notify({
       type: "positive",
       message: "Proporcion guardada exitosamente",
