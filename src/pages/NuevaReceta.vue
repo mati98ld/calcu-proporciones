@@ -134,6 +134,18 @@ const crearReceta = () => {
       type: "warning",
       message: "La receta debe tener al menos un ingrediente",
     });
+  } else if (
+    $q.localStorage
+      .getAllKeys()
+      .map(function (elemento) {
+        return elemento.toUpperCase();
+      })
+      .includes(recetaName.value.toUpperCase())
+  ) {
+    $q.notify({
+      type: "negative",
+      message: "Ya existe la receta " + recetaName.value.toString(),
+    });
   } else {
     receta.value = {
       nombreReceta: recetaName.value,

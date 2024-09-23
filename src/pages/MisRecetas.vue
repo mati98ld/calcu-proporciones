@@ -13,7 +13,7 @@
         class="absolute-top-right q-mt-lg q-mr-lg"
       />
     </div>
-    <q-separator class="q-mt-xs"></q-separator>
+    <q-separator v-if="keys.length" class="q-mt-xs"></q-separator>
     <q-list separator>
       <q-item v-for="receta in keys" :key="receta" class="q-pl-xs q-pr-xs">
         <q-item-section>
@@ -132,7 +132,7 @@
             "
           >
             <q-select
-              class="q-pa-none bg-secondary q-mb-md q-mt-xs"
+              class="q-pa-none bg-secondary q-mb-lg q-mt-xs"
               outlined
               clearable
               label="Ingrediente"
@@ -143,7 +143,7 @@
               ]"
             ></q-select>
             <q-input
-              class="q-pa-none bg-secondary q-mb-md q-mt-xs"
+              class="q-pa-none bg-secondary q-mb-lg q-mt-xs"
               outlined
               type="text"
               label="Cantidad"
@@ -251,6 +251,8 @@ const ingrediente = ref(null);
 const edit_descripcion = ref();
 const editar = ref(false);
 
+const keys = ref($q.localStorage.getAllKeys());
+
 const ordenar = () => {
   estaOrdenadoAlfabeticamente(keys.value)
     ? keys.value.reverse()
@@ -274,11 +276,10 @@ const obtenerReceta = (key) => {
   }
   edit_descripcion.value = $receta.value.descripcion;
 };
-const keys = ref($q.localStorage.getAllKeys());
 
 const eliminarReceta = (key) => {
   $q.dialog({
-    title: "Confirmar",
+    title: "Eliminar receta",
     message: "¿Desea eliminar la receta '" + key + "'?",
     cancel: true,
     persistent: true,
@@ -297,7 +298,7 @@ const eliminarReceta = (key) => {
 
 const guardarEdit = () => {
   $q.dialog({
-    title: "Confirmar",
+    title: "Guardar cambios",
     message: "¿Desea guardar la receta editada?",
     cancel: true,
     persistent: true,

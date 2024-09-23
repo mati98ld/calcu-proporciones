@@ -157,7 +157,7 @@ const index = (arr, ele) => {
 
 const eliminarIngrediente = (array) => {
   $q.dialog({
-    title: "Confirmar",
+    title: "Eliminar ingrediente",
     message: "¿Desea eliminar el ingrediente seleccionado?",
     cancel: true,
     persistent: true,
