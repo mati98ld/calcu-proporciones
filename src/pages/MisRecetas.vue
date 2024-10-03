@@ -32,6 +32,18 @@
             padding="sm"
           >
             <q-fab-action
+              v-if="!receta.includes('prop')"
+              push
+              color="primary"
+              round
+              icon="calculate"
+              dense
+              @click.stop="
+                obtenerReceta(receta);
+                propor = true;
+              "
+            />
+            <q-fab-action
               push
               color="primary"
               round
@@ -171,13 +183,26 @@
     <q-dialog v-model="editar">
       <q-card class="bg-secondary">
         <q-card-section class="row q-pb-none">
-          <div class="text-h5 q-pl-md text-black text-bold">
-            {{ $receta.nombreReceta }}
-          </div>
+          <div class="text-h6 text-black text-bold">Editar receta</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
         <q-card-section>
+          <div class="row justify-around text-bold text-h7 text-primary">
+            Nombre de la receta:
+          </div>
+          <q-input
+            class="text-h5"
+            v-model="edit_nombreReceta"
+            outlined
+            autogrow
+            style="min-width: 300px"
+          ></q-input>
+        </q-card-section>
+        <q-card-section>
+          <div class="row justify-around text-bold text-h7 text-primary">
+            Ingredientes:
+          </div>
           <TablaDeIngredientes
             :ingredientes="$receta.ingredientes"
             :editable="true"
@@ -185,12 +210,12 @@
           ></TablaDeIngredientes>
         </q-card-section>
         <div class="bg-secondary q-pa-xs" style="border-radius: 10px">
-          <div class="text-black row justify-around text-bold text-h6">
+          <div class="row justify-around text-bold text-h7 text-primary">
             Descripción:
           </div>
           <div class="row justify-around">
             <q-card-section
-              style="max-height: 300px"
+              style="max-height: 300px; padding: 0"
               class="scroll text-black text-body1 text-center text-justify"
             >
               <q-input
@@ -250,6 +275,7 @@ const cantidad = ref(null);
 const ingrediente = ref(null);
 const edit_descripcion = ref();
 const editar = ref(false);
+const edit_nombreReceta = ref();
 
 const keys = ref($q.localStorage.getAllKeys());
 
@@ -275,6 +301,7 @@ const obtenerReceta = (key) => {
     opciones.value.push($receta.value.ingredientes[i].ingrediente);
   }
   edit_descripcion.value = $receta.value.descripcion;
+  edit_nombreReceta.value = $receta.value.nombreReceta;
 };
 
 const eliminarReceta = (key) => {
@@ -305,13 +332,14 @@ const guardarEdit = () => {
   }).onOk(() => {
     let recetaEdit;
     recetaEdit = {
-      nombreReceta: $receta.value.nombreReceta,
+      nombreReceta: edit_nombreReceta.value,
       ingredientes: $receta.value.ingredientes,
       descripcion: edit_descripcion.value,
     };
-    $q.localStorage.set($receta.value.nombreReceta, JSON.stringify(recetaEdit));
+    $q.localStorage.remove($receta.value.nombreReceta);
+    $q.localStorage.set(edit_nombreReceta.value, JSON.stringify(recetaEdit));
     editar.value = false;
-
+    keys.value = $q.localStorage.getAllKeys();
     $q.notify({
       message: "Receta editada correctamente",
       type: "positive",

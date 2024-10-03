@@ -15,10 +15,7 @@
     :rows-per-page-options="[0]"
   >
   </q-table>
-  <div
-    v-show="!(ingredientes[0] == null) && editable"
-    class="row justify-end q-mt-sm"
-  >
+  <div v-show="editable" class="row justify-end q-mt-sm">
     <q-btn
       v-show="seleccion == 'single'"
       color="purple"
@@ -28,7 +25,7 @@
       >cancelar</q-btn
     >
     <q-btn
-      v-if="selected[0] == null && addIng && seleccion == 'none'"
+      v-if="addIng && seleccion == 'none'"
       icon="add"
       round
       color="primary"
@@ -37,14 +34,14 @@
       :disable="seleccion == 'single'"
     ></q-btn>
     <q-btn
-      v-if="selected[0] == null"
+      v-if="!(ingredientes[0] == null) && selected[0] == null"
       label="Eliminar un ingrediente"
       color="primary"
       @click="seccionEliminar"
       :disable="seleccion == 'single'"
     ></q-btn>
     <q-btn
-      v-else
+      v-else-if="!(ingredientes[0] == null)"
       label="Eliminar"
       color="primary"
       @click="eliminarIngrediente(ingredientes)"
