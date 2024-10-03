@@ -199,7 +199,7 @@
             style="min-width: 300px"
           ></q-input>
         </q-card-section>
-        <q-card-section>
+        <q-card-section style="padding-top: 0">
           <div class="row justify-around text-bold text-h7 text-primary">
             Ingredientes:
           </div>
